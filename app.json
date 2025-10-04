@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "react-native-recipe",
-    "slug": "react-native-recipe",
+    "slug": "assignment-recipe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7a1141cd-dc6a-450b-ad04-9d483b624756"
+      }
+    },
+    "owner": "alexandruleiba"
   }
 }
