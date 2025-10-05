@@ -32,12 +32,8 @@ function HomePage() {
     } else {
       const selectedRecipe =
         RECIPIES[category.toLowerCase() as keyof typeof RECIPIES];
-      if (
-        selectedRecipe &&
-        "image" in selectedRecipe &&
-        "id" in selectedRecipe &&
-        "categoryId" in selectedRecipe
-      ) {
+
+      if (selectedRecipe) {
         setCategory(selectedRecipe);
       }
     }
@@ -83,13 +79,13 @@ function HomePage() {
                       (item.name === "My food" ||
                         item.name === "My favorites") && {
                         borderColor: "#3ee06ccf",
-                        borderWidth: 3,
+                        borderWidth: 5,
                       },
 
                       category.name.toLowerCase() ===
                         item.name.toLocaleLowerCase() && {
-                        borderColor: "#ffb20ccf",
-                        borderWidth: 3,
+                        borderColor: "#ffb514e9",
+                        borderWidth: 5,
                       },
                     ]}
                   >
@@ -107,7 +103,11 @@ function HomePage() {
       <ThemedView style={[globalStyles.spacer40]}>
         <FlatList
           ListHeaderComponentStyle={{ marginBottom: 20 }}
-          ListHeaderComponent={() => <H2>Recipies</H2>}
+          ListHeaderComponent={() => (
+            <H2>
+              Recipies <H3 style={{ color: "#fff236cf" }}>{category.name}</H3>
+            </H2>
+          )}
           //
           columnWrapperStyle={{ marginTop: hp(2) }}
           numColumns={2}
@@ -187,8 +187,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   recipeImage: {
-    // height: "100%",
+    height: "100%",
     width: "100%",
-    objectFit: "cover",
+    objectFit: "contain",
   },
 });

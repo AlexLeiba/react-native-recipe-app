@@ -1,24 +1,17 @@
+import { FavoriteButton, GoBackButton } from "@/components/headerButtons";
 import { ThemedView } from "@/components/themed-view";
 import { H1, H2, H3, Paragraph } from "@/components/typography/typography";
 import { RECIPIES, SelectedRecipeType } from "@/constants/MockData";
 import { globalStyles } from "@/constants/stylesheets";
 import { Colors } from "@/constants/theme";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  ArrowLeft,
-  Clock,
-  Flame,
-  FlameKindling,
-  Heart,
-  User2,
-} from "lucide-react-native";
+import { Clock, Flame, FlameKindling, User2 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   ScrollView,
   Text,
-  TouchableHighlight,
   useColorScheme,
   View,
 } from "react-native";
@@ -79,33 +72,8 @@ function RecipeDetailsPage() {
           }}
         />
       </View>
-      <TouchableHighlight
-        onPress={() => router.back()}
-        style={{
-          position: "absolute",
-          top: 50,
-          left: 20,
-          zIndex: 2,
-          borderRadius: "100%",
-          backgroundColor: "black",
-          padding: 10,
-        }}
-      >
-        <ArrowLeft color={"white"} />
-      </TouchableHighlight>
-      <TouchableHighlight
-        style={{
-          position: "absolute",
-          top: 50,
-          right: 20,
-          zIndex: 2,
-          borderRadius: "100%",
-          backgroundColor: "black",
-          padding: 10,
-        }}
-      >
-        <Heart color={"white"} />
-      </TouchableHighlight>
+      <GoBackButton />
+      <FavoriteButton />
       <View style={[globalStyles.alignCenter, { gap: 10, marginBottom: 20 }]}>
         <H1>{selectedRecipe?.name}</H1>
         <H3 style={{ color: "gray" }}>{selectedRecipe?.details.subtitle}</H3>
