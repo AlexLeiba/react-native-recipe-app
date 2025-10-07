@@ -1,7 +1,8 @@
 import { ThemedView } from "@/components/themed-view";
 import { H1, H2, H3, Paragraph } from "@/components/typography/typography";
-import { CATEGORIES, RECIPIES } from "@/constants/MockData";
 import { globalStyles } from "@/constants/stylesheets";
+import { RootState } from "@/store/config";
+import { CategoryType, selectCategory } from "@/store/slices/categoriesReducer";
 import { useRouter } from "expo-router";
 import { User } from "lucide-react-native";
 import React from "react";
@@ -15,27 +16,41 @@ import {
   View,
 } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { useDispatch, useSelector } from "react-redux";
 
 function HomePage() {
   const theme = useColorScheme() ?? "light";
-  const [category, setCategory] = React.useState<typeof RECIPIES.beef>(
-    RECIPIES.beef
+  const categoriesData = useSelector((state: RootState) => state.categories);
+  const hardcodedRecipeData = useSelector(
+    (state: RootState) => state.hardcodedRecipes
   );
+  const dispatch = useDispatch();
+
+  const [category, setCategory] = React.useState<CategoryType>({
+    name: "Beef",
+    image: require("../assets/food-categories/beef.png"),
+    id: 3,
+    selected: true,
+  });
   const router = useRouter();
 
-  function selectCategory(category: (typeof CATEGORIES)[0]["name"]) {
-    if (category === "My food") {
-      router.push("/my-food-page");
+  function handleSelectCategory(
+    category: CategoryType["name"],
+    categoryId: number
+  ) {
+    if (category === "My recipies") {
+      return router.push("/my-recipe-page");
     }
-    if (category === "My favorites") {
-      router.push("/favorites");
+    if (category === "Favorites") {
+      return router.push("/favorites");
     } else {
-      const selectedRecipe =
-        RECIPIES[category.toLowerCase() as keyof typeof RECIPIES];
+      dispatch(selectCategory({ categoryId }));
 
-      if (selectedRecipe) {
-        setCategory(selectedRecipe);
-      }
+      const selectedCategory = categoriesData.find(
+        (cat) => cat.id === categoryId
+      );
+
+      selectedCategory && setCategory(selectedCategory);
     }
   }
   return (
@@ -60,15 +75,17 @@ function HomePage() {
       </ThemedView>
 
       <ThemedView style={globalStyles.spacer20}>
-        {/* Categories */}
+        {/* CATEGORIES SECTION */}
         <FlatList
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ gap: 10 }}
           horizontal
-          data={CATEGORIES}
+          data={categoriesData}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => selectCategory(item.name)}>
+              <TouchableOpacity
+                onPress={() => handleSelectCategory(item.name, item.id)}
+              >
                 <ThemedView style={[globalStyles.alignCenter, {}]}>
                   <ThemedView
                     style={[
@@ -76,14 +93,13 @@ function HomePage() {
                       theme === "light"
                         ? { borderColor: "black" }
                         : { borderColor: "white" },
-                      (item.name === "My food" ||
-                        item.name === "My favorites") && {
+                      (item.name === "My recipies" ||
+                        item.name === "Favorites") && {
                         borderColor: "#3ee06ccf",
                         borderWidth: 5,
                       },
 
-                      category.name.toLowerCase() ===
-                        item.name.toLocaleLowerCase() && {
+                      category?.id === item.id && {
                         borderColor: "#ffb514e9",
                         borderWidth: 5,
                       },
@@ -99,20 +115,24 @@ function HomePage() {
         />
       </ThemedView>
 
-      {/* Recipies */}
+      {/*RECIPES SECTION */}
       <ThemedView style={[globalStyles.spacer40]}>
         <FlatList
           ListHeaderComponentStyle={{ marginBottom: 20 }}
           ListHeaderComponent={() => (
             <H2>
-              Recipies <H3 style={{ color: "#fff236cf" }}>{category.name}</H3>
+              Recipies <H3 style={{ color: "#fff236cf" }}>{category?.name}</H3>
             </H2>
           )}
           //
           columnWrapperStyle={{ marginTop: hp(2) }}
           numColumns={2}
           contentContainerStyle={{ gap: 5 }}
-          data={category.data}
+          data={
+            category && category.name
+              ? hardcodedRecipeData[category.name.toLowerCase()].data
+              : hardcodedRecipeData["beef"].data
+          }
           renderItem={({ item, index }) => {
             return (
               <ThemedView
@@ -124,7 +144,9 @@ function HomePage() {
                   style={{ flex: 1 }}
                   onPress={() =>
                     router.push(
-                      `/recipe/${item.id + "-" + category.name.toLowerCase()}`
+                      `/recipe/${
+                        item.details.id + "-" + category?.name.toLowerCase()
+                      }`
                     )
                   }
                 >
@@ -136,7 +158,7 @@ function HomePage() {
                   >
                     <Image source={item.image} style={[styles.recipeImage]} />
                   </ThemedView>
-                  <H3 numberOfLines={2}>{item.name}</H3>
+                  <H3 numberOfLines={2}>{item.details.title}</H3>
                 </TouchableOpacity>
               </ThemedView>
             );

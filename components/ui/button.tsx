@@ -9,7 +9,7 @@ import { H3 } from "../typography/typography";
 type ButtonProps = {
   handlePress: () => void;
   title: string;
-  type?: "primary" | "secondary";
+  type?: "primary" | "secondary" | "tertiary";
 } & TouchableHighlightProps;
 export const Button = ({
   handlePress,
@@ -41,6 +41,14 @@ const styled = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     color: "black",
+    width: "100%",
+  },
+  tertiary: {
+    padding: 10,
+    backgroundColor: "#8d2111",
+    borderRadius: 20,
+    alignItems: "center",
+    color: "white",
     width: "100%",
   },
 });

@@ -11,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
-  ImageSourcePropType,
   ScrollView,
   useColorScheme,
   View,
@@ -20,49 +19,30 @@ import { useSelector } from "react-redux";
 
 function RecipeDetailsPage() {
   const { recipeId } = useLocalSearchParams();
-
   const theme = useColorScheme() ?? "light";
-  const recipeData = useSelector((state: RootState) => state.newRecipe); //TODO get the hardcoded data here, add in store other key which will keep all hardcoded data
+  const recipeData = useSelector((state: RootState) => state.newRecipe);
+  const [selectedRecipeId, setSelectedRecipeId] = useState<number>(0);
 
   const [selectedRecipeData, setSelectedRecipeData] = useState<RecipeType>();
 
-  const hardcodedRecipeData = useSelector(
-    (state: RootState) => state.hardcodedRecipes
-  );
-
-  const [selectedCategory, setSelectedCategory] = useState<{
-    id: number;
-    name: string;
-  }>({
-    id: 0,
-    name: "",
-  });
-
   useEffect(() => {
     if (typeof recipeId === "string") {
-      const recipeCategoryData = recipeId.split("-")[1];
-      const recipeIdData = Number(recipeId.split("-")[0]);
+      const recipeIdData = Number(recipeId);
+      if (isNaN(recipeIdData)) return;
 
-      if (isNaN(recipeIdData) || !recipeCategoryData) {
-        return;
-      }
+      setSelectedRecipeId(recipeIdData);
+      const selectedRecipe = recipeData.find(
+        (data) => data.id === Number(recipeId)
+      );
 
-      setSelectedCategory({
-        id: Number(recipeCategoryData),
-        name: recipeCategoryData,
-      });
-      const selectedRecipeCategory =
-        hardcodedRecipeData[recipeCategoryData].data;
-
-      const selectedRecipeData = selectedRecipeCategory.find(
-        (data) => data.id === recipeIdData
-      )?.details;
-
-      if (selectedRecipeData) {
-        setSelectedRecipeData(selectedRecipeData);
+      if (selectedRecipe) {
+        setSelectedRecipeData({
+          ...selectedRecipe,
+          ingredients: selectedRecipe.ingredients,
+        });
       }
     }
-  }, [recipeId, recipeData, setSelectedCategory]);
+  }, [recipeId, recipeData]);
 
   if (!selectedRecipeData) {
     return (
@@ -86,7 +66,9 @@ function RecipeDetailsPage() {
         ]}
       >
         <Image
-          source={selectedRecipeData.image as ImageSourcePropType}
+          source={{
+            uri: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+          }}
           style={{
             width: "100%",
             height: "100%",
@@ -96,12 +78,12 @@ function RecipeDetailsPage() {
         />
       </View>
 
-      <GoBackButton path="/" />
+      <GoBackButton path="/my-recipe-page" />
 
       <FavoriteButton
         recipeData={selectedRecipeData}
-        recipeCategoryId={selectedCategory.id}
-        recipeCategoryName={selectedCategory.name}
+        recipeCategoryName={"my-recipe-page"}
+        recipeCategoryId={selectedRecipeId}
       />
 
       <View style={[globalStyles.alignCenter, { gap: 10, marginBottom: 20 }]}>
