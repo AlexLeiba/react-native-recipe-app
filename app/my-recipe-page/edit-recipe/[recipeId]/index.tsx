@@ -6,8 +6,10 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Button } from "@/components/ui/button";
-import { ImageUploader } from "@/components/ui/image-uploader";
+import { DropDown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
+import SwitchComponent from "@/components/ui/switch";
+import { CATEGORIES_DATA } from "@/constants/MockData";
 import { newRecipeSchema } from "@/constants/schemas";
 import { RootState } from "@/store/config";
 import {
@@ -28,7 +30,10 @@ const initialStateForm = {
   servings: 0,
   calories: 0,
   temperature: 0,
-  favorites: false,
+  link: false,
+  linkName: "",
+  linkUrl: "",
+  category: CATEGORIES_DATA[0],
 };
 
 function EditRecipePage() {
@@ -84,7 +89,7 @@ function EditRecipePage() {
             // on my recipies page show the new recipe
           }
         >
-          {({ values, errors, handleSubmit, handleChange }) => {
+          {({ values, errors, handleSubmit, handleChange, setFieldValue }) => {
             console.log("errr", errors);
             return (
               <View style={styles.formContainer}>
@@ -109,12 +114,44 @@ function EditRecipePage() {
                   value={values?.ingredients as string}
                   errorMessage={errors.ingredients}
                 />
+                {values.category?.name && (
+                  <DropDown
+                    label="Category *"
+                    values={values.category?.name}
+                    handleChange={(categoryValue) =>
+                      setFieldValue("category", categoryValue)
+                    }
+                  />
+                )}
 
-                <ImageUploader
-                  title="Upload an image"
-                  handlePick={handleChange("image")}
-                  image={values?.image}
-                />
+                {values.link && (
+                  <View>
+                    <SwitchComponent
+                      values={values.link}
+                      setFieldValue={() => setFieldValue("link", !values.link)}
+                      label="Add a Link"
+                    />
+
+                    {values.link && values.linkName && values.linkUrl && (
+                      <View style={styles.linkContainer}>
+                        <Input
+                          label="Link Name"
+                          placeholder="Type here the link name.."
+                          handleChange={handleChange("linkName")}
+                          value={values?.linkName}
+                          errorMessage={errors.link}
+                        />
+                        <Input
+                          label="Link URL"
+                          placeholder="Type here the link url.."
+                          handleChange={handleChange("linkUrl")}
+                          value={values?.linkUrl}
+                          errorMessage={errors.link}
+                        />
+                      </View>
+                    )}
+                  </View>
+                )}
 
                 <View style={styles.cookingDetailsSection}>
                   <H2>Cooking details:</H2>
@@ -189,6 +226,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: 10,
     flexWrap: "wrap",
+  },
+  linkContainer: {
+    flexDirection: "column",
+    gap: 10,
   },
 });
 

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ImageSourcePropType } from "react-native";
+import { CategoryType } from "./categoriesReducer";
 
 export type RecipeType = {
   id: number;
@@ -14,6 +15,10 @@ export type RecipeType = {
   favorites?: boolean;
   categoryName?: string;
   categoryId?: number;
+  link?: boolean;
+  linkName?: string;
+  linkUrl?: string;
+  category?: CategoryType;
 };
 export const recipeInitialState: RecipeType[] = [];
 
@@ -38,6 +43,10 @@ const newRecipeSlice = createSlice({
         editedRecipe.servings = action.payload.servings;
         editedRecipe.calories = action.payload.calories;
         editedRecipe.temperature = action.payload.temperature;
+        editedRecipe.link = action.payload.link;
+        editedRecipe.linkName = action.payload.linkName;
+        editedRecipe.linkUrl = action.payload.linkUrl;
+        editedRecipe.category = action.payload.category;
       }
     },
     deleteRecipe: (state, action) => {

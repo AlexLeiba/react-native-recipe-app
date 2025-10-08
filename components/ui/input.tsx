@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 5,
     flex: 1,
-    minWidth: 200,
+    minWidth: 150,
   },
   inputStyle: {
     padding: 10,

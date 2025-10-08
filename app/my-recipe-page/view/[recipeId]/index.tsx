@@ -1,6 +1,7 @@
 import { FavoriteButton, GoBackButton } from "@/components/headerButtons";
 import { ThemedView } from "@/components/themed-view";
 import { H1, H2, Paragraph } from "@/components/typography/typography";
+import { Button } from "@/components/ui/button";
 import { globalStyles } from "@/constants/stylesheets";
 import { Colors } from "@/constants/theme";
 import { RootState } from "@/store/config";
@@ -11,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
+  Linking,
   ScrollView,
   useColorScheme,
   View,
@@ -51,6 +53,29 @@ function RecipeDetailsPage() {
       </ThemedView>
     );
   }
+
+  const recipeCookDetails = [
+    {
+      icon: <Clock color={Colors[theme].text} size={20} />,
+      title: `${selectedRecipeData?.timeToCook + " min"}`,
+    },
+    {
+      icon: <Flame color={Colors[theme].text} size={20} />,
+      title: selectedRecipeData?.calories
+        ? `${selectedRecipeData?.calories + "calories"}`
+        : "",
+    },
+    {
+      icon: <FlameKindling color={Colors[theme].text} size={20} />,
+      title: selectedRecipeData?.temperature
+        ? `${selectedRecipeData?.temperature + "°C"} `
+        : "",
+    },
+    {
+      icon: <User2 color={Colors[theme].text} size={20} />,
+      title: `${selectedRecipeData?.servings} servings`,
+    },
+  ];
   return (
     <ScrollView>
       <View
@@ -66,9 +91,7 @@ function RecipeDetailsPage() {
         ]}
       >
         <Image
-          source={{
-            uri: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-          }}
+          source={selectedRecipeData?.category?.image}
           style={{
             width: "100%",
             height: "100%",
@@ -88,7 +111,35 @@ function RecipeDetailsPage() {
 
       <View style={[globalStyles.alignCenter, { gap: 10, marginBottom: 20 }]}>
         <H1>{selectedRecipeData?.title}</H1>
+
+        {selectedRecipeData.description && (
+          <View style={[{}, { gap: 10, marginBottom: 20 }]}>
+            <Paragraph style={{ color: Colors[theme].text }}>
+              {selectedRecipeData.description}
+            </Paragraph>
+          </View>
+        )}
       </View>
+
+      {selectedRecipeData.link &&
+        selectedRecipeData.linkUrl &&
+        selectedRecipeData.linkName && (
+          <View
+            style={[
+              globalStyles.alignCenter,
+              { gap: 10, marginBottom: 20, marginHorizontal: 20 },
+            ]}
+          >
+            <Button
+              type="link"
+              title={selectedRecipeData.linkName}
+              handlePress={() => {
+                selectedRecipeData.linkUrl &&
+                  Linking.openURL(selectedRecipeData.linkUrl);
+              }}
+            />
+          </View>
+        )}
 
       <View
         style={{
@@ -98,38 +149,12 @@ function RecipeDetailsPage() {
           marginHorizontal: 20,
         }}
       >
-        <DetailsCard
-          icon={
-            <Clock
-              color={theme === "light" ? Colors.dark.icon : Colors.light.icon}
-            />
-          }
-          title={selectedRecipeData?.timeToCook.toString() + " min"}
-        />
-        <DetailsCard
-          icon={
-            <User2
-              color={theme === "light" ? Colors.dark.icon : Colors.light.icon}
-            />
-          }
-          title={selectedRecipeData?.servings.toString() + " people"}
-        />
-        <DetailsCard
-          icon={
-            <Flame
-              color={theme === "light" ? Colors.dark.icon : Colors.light.icon}
-            />
-          }
-          title={selectedRecipeData?.calories.toString() + " kcal"}
-        />
-        <DetailsCard
-          icon={
-            <FlameKindling
-              color={theme === "light" ? Colors.dark.icon : Colors.light.icon}
-            />
-          }
-          title={selectedRecipeData?.temperature.toString() + " °C"}
-        />
+        {recipeCookDetails.map((item, index) => {
+          if (!item.title) return;
+          return (
+            <DetailsCard key={index} icon={item.icon} title={item.title} />
+          );
+        })}
       </View>
 
       <FlatList
@@ -176,11 +201,12 @@ const DetailsCard = ({
   icon: React.ReactNode;
   title: string;
 }) => {
+  const theme = useColorScheme() ?? "light";
   return (
     <View
       style={{
         padding: 10,
-        backgroundColor: "#bebebe",
+        backgroundColor: "#757474",
         borderRadius: 20,
         flex: 1,
         flexDirection: "column",
@@ -189,7 +215,7 @@ const DetailsCard = ({
     >
       {icon}
 
-      <Paragraph style={{ color: "black" }}>{title}</Paragraph>
+      <Paragraph style={{ color: Colors[theme].text }}>{title}</Paragraph>
     </View>
   );
 };

@@ -74,8 +74,8 @@ function HomePage() {
         </H1>
       </ThemedView>
 
+      {/* CATEGORIES SECTION */}
       <ThemedView style={globalStyles.spacer20}>
-        {/* CATEGORIES SECTION */}
         <FlatList
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ gap: 10 }}
@@ -131,13 +131,19 @@ function HomePage() {
           data={
             category && category.name
               ? hardcodedRecipeData[category.name.toLowerCase()].data
-              : hardcodedRecipeData["beef"].data
+              : hardcodedRecipeData["beef"].data //initial state data
           }
           renderItem={({ item, index }) => {
             return (
               <ThemedView
                 style={[
-                  { paddingHorizontal: 10, flex: 1, marginBottom: hp(1.5) },
+                  {
+                    paddingHorizontal: 10,
+                    flex: 1,
+
+                    marginBottom: hp(5),
+                  },
+                  { height: index % 3 === 0 ? 250 : 220 },
                 ]}
               >
                 <TouchableOpacity
@@ -153,7 +159,9 @@ function HomePage() {
                   <ThemedView
                     style={[
                       styles.recipeCard,
-                      { height: index % 3 === 0 ? hp(25) : hp(30) },
+                      { height: "100%", width: "100%" },
+
+                      // { height: index % 3 === 0 ? hp(25) : hp(30) },
                     ]}
                   >
                     <Image source={item.image} style={[styles.recipeImage]} />

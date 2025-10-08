@@ -7,14 +7,29 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
+import { LottieSplashScreen } from "@/components/LottieSplashScreenAnimation/LottieSplashScreen";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useEffect, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "../store/config";
 
 export default function RootLayout() {
+  const [isPlashVisible, setIsPlashVisible] = useState(true);
   const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    // simulate loading or initialization
+    const timer = setTimeout(() => setIsPlashVisible(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isPlashVisible) {
+    return (
+      <LottieSplashScreen onAnimationFinish={() => setIsPlashVisible(false)} />
+    );
+  }
 
   return (
     <Provider store={store}>

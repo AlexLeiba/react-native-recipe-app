@@ -3,7 +3,6 @@ import HeaderTitle from "@/components/headerTitle";
 import { ThemedView } from "@/components/themed-view";
 import { H2, H3 } from "@/components/typography/typography";
 import { Button } from "@/components/ui/button";
-import { RECIPIES } from "@/constants/MockData";
 import { globalStyles } from "@/constants/stylesheets";
 import { RootState } from "@/store/config";
 import { Link, useRouter } from "expo-router";
@@ -26,10 +25,9 @@ function MyRecipePage() {
   });
   console.log("🚀 ~ MyRecipePage ~ state:", myRecipiesData);
   const theme = useColorScheme() ?? "light";
-  const [category, setCategory] = React.useState<typeof RECIPIES.beef>(
-    RECIPIES.beef
-  );
+
   const router = useRouter();
+
   return (
     <ScrollView>
       <ThemedView>
@@ -81,9 +79,7 @@ function MyRecipePage() {
                   >
                     <ThemedView style={[styles.recipeCard]}>
                       <Image
-                        source={{
-                          uri: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-                        }}
+                        source={item.category?.image}
                         style={[styles.recipeImage]}
                       />
                     </ThemedView>

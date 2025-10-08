@@ -16,4 +16,9 @@ export const newRecipeSchema = Yup.object().shape({
   timeToCook: Yup.number().required("Required").min(1, "Required"),
   calories: Yup.number().optional(),
   temperature: Yup.number().optional(),
+
+  category: Yup.string().required("Required"),
+  link: Yup.boolean().optional(),
+  linkName: Yup.string().optional(),
+  linkUrl: Yup.string().optional(),
 });

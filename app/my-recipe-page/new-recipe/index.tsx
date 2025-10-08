@@ -3,11 +3,13 @@ import { ThemedView } from "@/components/themed-view";
 import { H1, H2 } from "@/components/typography/typography";
 import { Formik } from "formik";
 import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, useColorScheme, View } from "react-native";
 
 import { Button } from "@/components/ui/button";
-import { ImageUploader } from "@/components/ui/image-uploader";
+import { DropDown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
+import SwitchComponent from "@/components/ui/switch";
+import { CATEGORIES_DATA } from "@/constants/MockData";
 import { newRecipeSchema } from "@/constants/schemas";
 import { newRecipe } from "@/store/slices/recipeReducer";
 import { useRouter } from "expo-router";
@@ -23,11 +25,16 @@ const initialStateForm = {
   servings: 0,
   calories: 0,
   temperature: 0,
+  link: false,
+  linkName: "",
+  linkUrl: "",
+  category: CATEGORIES_DATA[0].name,
 };
 
 function NewRecipePage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const theme = useColorScheme() ?? "light";
   return (
     <ScrollView>
       <ThemedView>
@@ -56,6 +63,10 @@ function NewRecipePage() {
                   id: Date.now(),
                   ingredients: values.ingredients.split(","),
                   favorites: false,
+                  category: CATEGORIES_DATA.find(
+                    (cat) =>
+                      cat.name.toLowerCase() === values.category.toLowerCase()
+                  ),
                 })
               );
               router.push("/my-recipe-page");
@@ -65,7 +76,7 @@ function NewRecipePage() {
             // on my recipies page show the new recipe
           }
         >
-          {({ values, errors, handleSubmit, handleChange }) => {
+          {({ values, errors, handleSubmit, handleChange, setFieldValue }) => {
             console.log("errr", errors);
             return (
               <View style={styles.formContainer}>
@@ -91,11 +102,40 @@ function NewRecipePage() {
                   errorMessage={errors.ingredients}
                 />
 
-                <ImageUploader
-                  title="Upload an image"
-                  handlePick={handleChange("image")}
-                  image={values?.image}
+                <DropDown
+                  label="Category *"
+                  values={values.category}
+                  handleChange={(categoryValue) =>
+                    setFieldValue("category", categoryValue)
+                  }
                 />
+
+                <View>
+                  <SwitchComponent
+                    values={values.link}
+                    setFieldValue={() => setFieldValue("link", !values.link)}
+                    label="Add a Link"
+                  />
+
+                  {values.link && (
+                    <View style={styles.linkContainer}>
+                      <Input
+                        label="Link Name"
+                        placeholder="Type here the link name.."
+                        handleChange={handleChange("linkName")}
+                        value={values?.linkName}
+                        errorMessage={errors.link}
+                      />
+                      <Input
+                        label="Link URL"
+                        placeholder="Type here the link url.."
+                        handleChange={handleChange("linkUrl")}
+                        value={values?.linkUrl}
+                        errorMessage={errors.link}
+                      />
+                    </View>
+                  )}
+                </View>
 
                 <View style={styles.cookingDetailsSection}>
                   <H2>Cooking details:</H2>
@@ -165,6 +205,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: 10,
     flexWrap: "wrap",
+  },
+  linkContainer: {
+    flexDirection: "column",
+    gap: 10,
   },
 });
 

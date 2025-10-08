@@ -1,44 +1,52 @@
+import { CategoryType } from "@/store/slices/categoriesReducer";
+import { HardcodedRecipiesType } from "@/store/slices/hardcodedRecipeReducer";
 import { RecipeType } from "@/store/slices/recipeReducer";
 
-export const CATEGORIES = [
+export const CATEGORIES_DATA: CategoryType[] = [
   {
     name: "My recipies",
     image: require("../assets/food-categories/fish.jpg"),
     id: 1,
+    selected: false,
   },
   {
     name: "Favorites",
     image: require("../assets/food-categories/favorites.png"),
     id: 2,
+    selected: false,
   },
   {
     name: "Beef",
     image: require("../assets/food-categories/beef.png"),
     id: 3,
+    selected: false,
   },
   {
     name: "Dessert",
     image: require("../assets/food-categories/dessert.webp"),
     id: 5,
+    selected: false,
   },
   {
     name: "Chicken",
     image: require("../assets/food-categories/chicken.png"),
     id: 4,
+    selected: false,
   },
 
   {
     name: "Lamb",
     image: require("../assets/food-categories/lamb.webp"),
     id: 6,
+    selected: false,
   },
   {
     name: "Seafood",
     image: require("../assets/food-categories/sea-food.webp"),
     id: 7,
+    selected: false,
   },
 ];
-
 export type SelectedRecipeType = {
   name: string;
   image: any;
@@ -47,48 +55,26 @@ export type SelectedRecipeType = {
   details: RecipeType;
 };
 
-// export type RecipeType = {
-//   name: string;
-//   image: any;
-//   id: number;
-//   categoryId: number;
-//   data?: {
-//     name: string;
-//     image: any;
-//     id: number;
-//     categoryId: number;
-//     details: {
-//       image: any;
-//       title: string;
-//       subtitle: string;
-//       timeToCook: string;
-//       servings: number;
-//       calories: number;
-//       temperature: number;
-//       ingredients: string[];
-//     };
-//   }[];
-// };
-export const RECIPIES = {
+export const HARDCODED_RECIPIES: HardcodedRecipiesType = {
   beef: {
+    id: 100,
     name: "Beef",
     image: require("../assets/food-categories/beef.png"),
-    id: 10,
     categoryId: 3,
     data: [
       {
-        name: "Beef dish",
+        name: "Beef",
         image: require("../assets/food-categories/beef.png"),
-        id: 10,
+        id: 101,
         categoryId: 3,
         details: {
-          id: 10,
+          id: 101,
           favorites: false,
           image: require("../assets/food-categories/beef.png"),
           title: "Beef dish",
-          subtitle: "Beef dish",
-          timeToCook: "30 min",
+          timeToCook: 30,
           servings: 4,
+          description: "Beef dish",
           calories: 400,
           temperature: 100,
           ingredients: [
@@ -109,17 +95,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Beef with vegetables",
+        name: "Beef",
         image: require("../assets/food-categories/beef2.png"),
-        id: 9,
+        id: 102,
         categoryId: 3,
         details: {
-          id: 9,
+          id: 102,
           favorites: false,
           image: require("../assets/food-categories/beef2.png"),
           title: "Beef with vegetables",
-          subtitle: "Beef dish",
-          timeToCook: "30 min",
+          description: "Beef with vegetables",
+          timeToCook: 30,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -141,17 +127,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Fried beef",
+        name: "Beef",
         image: require("../assets/food-categories/beef3.png"),
-        id: 11,
+        id: 103,
         categoryId: 3,
         details: {
-          id: 11,
+          id: 103,
           favorites: false,
           image: require("../assets/food-categories/beef3.png"),
           title: "Fried beef",
-          subtitle: "Beef dish",
-          timeToCook: "60 min",
+          description: "Fried beef",
+          timeToCook: 30,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -173,17 +159,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Beef with vegetables",
+        name: "Beef",
         image: require("../assets/food-categories/beef.png"),
-        id: 9,
+        id: 104,
         categoryId: 3,
         details: {
-          id: 9,
+          id: 104,
           favorites: false,
           image: require("../assets/food-categories/beef.png"),
           title: "Beef with vegetables",
-          subtitle: "Beef dish",
-          timeToCook: "30 min",
+          description: "Beef dish",
+          timeToCook: 45,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -205,18 +191,18 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Beef with vegetables",
+        name: "Beef",
         image: require("../assets/food-categories/beef2.png"),
-        id: 9,
+        id: 105,
         categoryId: 3,
         details: {
-          id: 9,
+          id: 105,
           favorites: false,
 
           image: require("../assets/food-categories/beef2.png"),
           title: "Beef with vegetables",
-          subtitle: "Beef dish",
-          timeToCook: "30 min",
+          description: "Beef dish",
+          timeToCook: 60,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -238,17 +224,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Beef with vegetables",
+        name: "Beef",
         image: require("../assets/food-categories/beef2.png"),
-        id: 9,
+        id: 106,
         categoryId: 3,
         details: {
-          id: 10,
+          id: 106,
           favorites: false,
           image: require("../assets/food-categories/beef2.png"),
           title: "Beef with vegetables",
-          subtitle: "Beef dish",
-          timeToCook: "30 min",
+          description: "Beef dish",
+          timeToCook: 70,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -274,21 +260,21 @@ export const RECIPIES = {
   dessert: {
     name: "Dessert",
     image: require("../assets/food-categories/dessert.webp"),
-    id: 12,
+    id: 200,
     categoryId: 5,
     data: [
       {
-        name: "Dessert cake",
+        name: "Dessert",
         image: require("../assets/food-categories/dessert.webp"),
-        id: 12,
+        id: 201,
         categoryId: 5,
         details: {
-          id: 10,
+          id: 201,
           favorites: false,
           image: require("../assets/food-categories/dessert.webp"),
           title: "Dessert cake",
-          subtitle: "Delicious Dessert Cake",
-          timeToCook: "30 min",
+          description: "Delicious Dessert Cake",
+          timeToCook: 45,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -307,17 +293,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Biscuits Chocolate",
+        name: "Dessert",
         image: require("../assets/food-categories/dessert2.webp"),
-        id: 9,
+        id: 202,
         categoryId: 5,
         details: {
-          id: 9,
+          id: 202,
           favorites: false,
           image: require("../assets/food-categories/dessert2.webp"),
           title: "Biscuits Chocolate",
-          subtitle: "Sweet Dessert",
-          timeToCook: "45 min",
+          description: "Sweet Dessert",
+          timeToCook: 15,
           servings: 6,
           calories: 1000,
           temperature: 100,
@@ -336,17 +322,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Cheesecake",
+        name: "Dessert",
         image: require("../assets/food-categories/dessert3.png"),
-        id: 10,
+        id: 203,
         categoryId: 5,
         details: {
-          id: 10,
+          id: 203,
           favorites: false,
           image: require("../assets/food-categories/dessert3.png"),
           title: "Cheesecake",
-          subtitle: "Sweet Dessert",
-          timeToCook: "60 min",
+          description: "Sweet Dessert",
+          timeToCook: 120,
           servings: 3,
           calories: 1000,
           temperature: 100,
@@ -365,17 +351,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Candy sweet chocolate",
+        name: "Dessert",
         image: require("../assets/food-categories/dessert2.webp"),
-        id: 11,
+        id: 204,
         categoryId: 5,
         details: {
-          id: 11,
+          id: 204,
           favorites: false,
           image: require("../assets/food-categories/dessert2.webp"),
           title: "Candy sweet chocolate",
-          subtitle: "Sweet Candy Dessert",
-          timeToCook: "35 min",
+          description: "Sweet Candy Dessert",
+          timeToCook: 55,
           servings: 4,
           calories: 600,
           temperature: 100,
@@ -394,17 +380,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Biscuits Chocolate",
+        name: "Dessert",
         image: require("../assets/food-categories/dessert3.png"),
-        id: 13,
+        id: 205,
         categoryId: 5,
         details: {
-          id: 13,
+          id: 205,
           favorites: false,
           image: require("../assets/food-categories/dessert3.png"),
           title: "Biscuits Chocolate",
-          subtitle: "Sweet Dessert",
-          timeToCook: "45 min",
+          description: "Sweet Dessert",
+          timeToCook: 66,
           servings: 6,
           calories: 1000,
           temperature: 100,
@@ -423,17 +409,17 @@ export const RECIPIES = {
         },
       },
       {
-        name: "Cheesecake",
+        name: "Dessert",
         image: require("../assets/food-categories/dessert.webp"),
-        id: 14,
+        id: 206,
         categoryId: 5,
         details: {
-          id: 14,
+          id: 206,
           favorites: false,
           image: require("../assets/food-categories/dessert.webp"),
           title: "Cheesecake",
-          subtitle: "Sweet Dessert",
-          timeToCook: "45 min",
+          description: "Sweet Dessert",
+          timeToCook: 45,
           servings: 6,
           calories: 1000,
           temperature: 100,
@@ -454,23 +440,23 @@ export const RECIPIES = {
     ],
   },
   chicken: {
-    name: "Dessert",
+    name: "Chicken",
     image: require("../assets/food-categories/dessert.webp"),
-    id: 10,
+    id: 300,
     categoryId: 5,
     data: [
       {
         name: "Chicken",
         image: require("../assets/food-categories/chicken.png"),
-        id: 10,
+        id: 301,
         categoryId: 5,
         details: {
-          id: 10,
+          id: 301,
           favorites: false,
           image: require("../assets/food-categories/chicken.png"),
           title: "Chicken",
-          subtitle: "Delicious Chicken",
-          timeToCook: "30 min",
+          description: "Delicious Chicken",
+          timeToCook: 30,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -493,21 +479,21 @@ export const RECIPIES = {
   lamb: {
     name: "Lamb",
     image: require("../assets/food-categories/lamb.webp"),
-    id: 11,
+    id: 400,
     categoryId: 5,
     data: [
       {
         name: "Lamb",
         image: require("../assets/food-categories/lamb.webp"),
-        id: 11,
+        id: 401,
         categoryId: 5,
         details: {
-          id: 11,
+          id: 401,
           favorites: false,
           image: require("../assets/food-categories/lamb.webp"),
           title: "Lamb",
-          subtitle: "Delicious Lamb",
-          timeToCook: "30 min",
+          description: "Delicious Lamb",
+          timeToCook: 65,
           servings: 4,
           calories: 400,
           temperature: 100,
@@ -530,21 +516,21 @@ export const RECIPIES = {
   seafood: {
     name: "Seafood",
     image: require("../assets/food-categories/sea-food.webp"),
-    id: 12,
+    id: 500,
     categoryId: 5,
     data: [
       {
         name: "Seafood",
         image: require("../assets/food-categories/sea-food.webp"),
-        id: 12,
+        id: 500,
         categoryId: 5,
         details: {
-          id: 12,
+          id: 500,
           favorites: false,
           image: require("../assets/food-categories/sea-food.webp"),
           title: "Seafood",
-          subtitle: "Delicious Seafood",
-          timeToCook: "30 min",
+          description: "Delicious Seafood",
+          timeToCook: 20,
           servings: 4,
           calories: 400,
           temperature: 100,
