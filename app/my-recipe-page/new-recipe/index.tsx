@@ -1,10 +1,17 @@
-import { GoBackButton } from "@/components/headerButtons";
 import { ThemedView } from "@/components/themed-view";
-import { H1, H2 } from "@/components/typography/typography";
+import { H2 } from "@/components/typography/typography";
 import { Formik } from "formik";
-import React from "react";
-import { ScrollView, StyleSheet, useColorScheme, View } from "react-native";
+import React, { useState } from "react";
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 
+import Header from "@/components/Header/Header";
 import { Button } from "@/components/ui/button";
 import { DropDown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
@@ -32,161 +39,169 @@ const initialStateForm = {
 };
 
 function NewRecipePage() {
+  const [scrollY, setScrollY] = useState(0);
   const router = useRouter();
   const dispatch = useDispatch();
   const theme = useColorScheme() ?? "light";
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const yOffset = event.nativeEvent.contentOffset.y;
+
+    setScrollY(yOffset);
+  };
   return (
-    <ScrollView>
-      <ThemedView>
-        <GoBackButton path="/my-recipe-page" />
+    <>
+      <Header
+        withArrowBack
+        backPath="/my-recipe-page"
+        scrollOffset={scrollY}
+        title="New recipe"
+      />
+      <ScrollView onScroll={handleScroll}>
+        <ThemedView style={{ paddingTop: 100, paddingBottom: 60 }}>
+          <Formik
+            // enableReinitialize
+            initialValues={initialStateForm}
+            validationSchema={newRecipeSchema}
+            onSubmit={
+              (values) => {
+                dispatch(
+                  newRecipe({
+                    ...values,
+                    id: Date.now(),
+                    ingredients: values.ingredients.split(","),
+                    favorites: false,
+                    category: CATEGORIES_DATA.find(
+                      (cat) =>
+                        cat.name.toLowerCase() === values.category.toLowerCase()
+                    ),
+                  })
+                );
+                router.push("/my-recipe-page");
+              }
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 30,
-            marginBottom: 60,
-          }}
-        >
-          <H1>New recipe</H1>
-        </View>
-
-        <Formik
-          // enableReinitialize
-          initialValues={initialStateForm}
-          validationSchema={newRecipeSchema}
-          onSubmit={
-            (values) => {
-              dispatch(
-                newRecipe({
-                  ...values,
-                  id: Date.now(),
-                  ingredients: values.ingredients.split(","),
-                  favorites: false,
-                  category: CATEGORIES_DATA.find(
-                    (cat) =>
-                      cat.name.toLowerCase() === values.category.toLowerCase()
-                  ),
-                })
-              );
-              router.push("/my-recipe-page");
+              // save to redux and redirect to my recipies
+              // on my recipies page show the new recipe
             }
-
-            // save to redux and redirect to my recipies
-            // on my recipies page show the new recipe
-          }
-        >
-          {({ values, errors, handleSubmit, handleChange, setFieldValue }) => {
-            console.log("errr", errors);
-            return (
-              <View style={styles.formContainer}>
-                <Input
-                  label="Title *"
-                  placeholder="Type here the title.."
-                  handleChange={handleChange("title")}
-                  value={values?.title || ""}
-                  errorMessage={errors.title}
-                />
-                <Input
-                  label="Description"
-                  placeholder="Type here the description.."
-                  handleChange={handleChange("description")}
-                  value={values?.description}
-                  errorMessage={errors.description}
-                />
-                <Input
-                  label="Ingredients (Separate by comma) *"
-                  placeholder="Separate the ingredients by comma."
-                  handleChange={handleChange("ingredients")}
-                  value={values?.ingredients}
-                  errorMessage={errors.ingredients}
-                />
-
-                <DropDown
-                  label="Category *"
-                  values={values.category}
-                  handleChange={(categoryValue) =>
-                    setFieldValue("category", categoryValue)
-                  }
-                />
-
-                <View>
-                  <SwitchComponent
-                    values={values.link}
-                    setFieldValue={() => setFieldValue("link", !values.link)}
-                    label="Add a Link"
+          >
+            {({
+              values,
+              errors,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+            }) => {
+              console.log("errr", errors);
+              return (
+                <View style={styles.formContainer}>
+                  <Input
+                    label="Title *"
+                    placeholder="Type here the title.."
+                    handleChange={handleChange("title")}
+                    value={values?.title || ""}
+                    errorMessage={errors.title}
+                  />
+                  <Input
+                    label="Description"
+                    placeholder="Type here the description.."
+                    handleChange={handleChange("description")}
+                    value={values?.description}
+                    errorMessage={errors.description}
+                  />
+                  <Input
+                    label="Ingredients (Separate by comma) *"
+                    placeholder="Separate the ingredients by comma."
+                    handleChange={handleChange("ingredients")}
+                    value={values?.ingredients}
+                    errorMessage={errors.ingredients}
                   />
 
-                  {values.link && (
-                    <View style={styles.linkContainer}>
+                  <DropDown
+                    label="Category *"
+                    values={values.category}
+                    handleChange={(categoryValue) =>
+                      setFieldValue("category", categoryValue)
+                    }
+                  />
+
+                  <View>
+                    <SwitchComponent
+                      values={values.link}
+                      setFieldValue={() => setFieldValue("link", !values.link)}
+                      label="Add a Link"
+                    />
+
+                    {values.link && (
+                      <View style={styles.linkContainer}>
+                        <Input
+                          label="Link Name"
+                          placeholder="Type here the link name.."
+                          handleChange={handleChange("linkName")}
+                          value={values?.linkName}
+                          errorMessage={errors.link}
+                        />
+                        <Input
+                          label="Link URL"
+                          placeholder="Type here the link url.."
+                          handleChange={handleChange("linkUrl")}
+                          value={values?.linkUrl}
+                          errorMessage={errors.link}
+                        />
+                      </View>
+                    )}
+                  </View>
+
+                  <View style={styles.cookingDetailsSection}>
+                    <H2>Cooking details:</H2>
+
+                    <View style={styles.cookingDetailsContainer}>
                       <Input
-                        label="Link Name"
-                        placeholder="Type here the link name.."
-                        handleChange={handleChange("linkName")}
-                        value={values?.linkName}
-                        errorMessage={errors.link}
+                        keyboardType="numeric"
+                        label="Servings * "
+                        placeholder="Type here the title.."
+                        handleChange={handleChange("servings")}
+                        value={values?.servings.toString()}
+                        errorMessage={errors.servings}
                       />
                       <Input
-                        label="Link URL"
-                        placeholder="Type here the link url.."
-                        handleChange={handleChange("linkUrl")}
-                        value={values?.linkUrl}
-                        errorMessage={errors.link}
+                        keyboardType="numeric"
+                        label="Time of cooking * "
+                        placeholder="Type here the title.."
+                        handleChange={handleChange("timeToCook")}
+                        value={values?.timeToCook.toString()}
+                        errorMessage={errors.timeToCook}
+                      />
+                      <Input
+                        keyboardType="numeric"
+                        label="Calories"
+                        placeholder="Type here the title.."
+                        handleChange={handleChange("calories")}
+                        value={values?.calories.toString()}
+                        errorMessage={errors.calories}
+                      />
+                      <Input
+                        keyboardType="numeric"
+                        label="Temperature"
+                        placeholder="Type here the title.."
+                        handleChange={handleChange("temperature")}
+                        value={values?.temperature.toString()}
+                        errorMessage={errors.temperature}
                       />
                     </View>
-                  )}
-                </View>
-
-                <View style={styles.cookingDetailsSection}>
-                  <H2>Cooking details:</H2>
-
-                  <View style={styles.cookingDetailsContainer}>
-                    <Input
-                      keyboardType="numeric"
-                      label="Servings * "
-                      placeholder="Type here the title.."
-                      handleChange={handleChange("servings")}
-                      value={values?.servings.toString()}
-                      errorMessage={errors.servings}
-                    />
-                    <Input
-                      keyboardType="numeric"
-                      label="Time of cooking * "
-                      placeholder="Type here the title.."
-                      handleChange={handleChange("timeToCook")}
-                      value={values?.timeToCook.toString()}
-                      errorMessage={errors.timeToCook}
-                    />
-                    <Input
-                      keyboardType="numeric"
-                      label="Calories"
-                      placeholder="Type here the title.."
-                      handleChange={handleChange("calories")}
-                      value={values?.calories.toString()}
-                      errorMessage={errors.calories}
-                    />
-                    <Input
-                      keyboardType="numeric"
-                      label="Temperature"
-                      placeholder="Type here the title.."
-                      handleChange={handleChange("temperature")}
-                      value={values?.temperature.toString()}
-                      errorMessage={errors.temperature}
-                    />
                   </View>
-                </View>
 
-                <Button
-                  type="secondary"
-                  title="Submit"
-                  handlePress={handleSubmit}
-                />
-              </View>
-            );
-          }}
-        </Formik>
-      </ThemedView>
-    </ScrollView>
+                  <Button
+                    type="secondary"
+                    title="Submit"
+                    handlePress={handleSubmit}
+                  />
+                </View>
+              );
+            }}
+          </Formik>
+        </ThemedView>
+      </ScrollView>
+    </>
   );
 }
 

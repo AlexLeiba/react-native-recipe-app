@@ -42,7 +42,7 @@ export default function RootLayout() {
               style={{
                 flex: 1,
                 paddingHorizontal: 20,
-                paddingVertical: 10,
+
                 backgroundColor: colorScheme === "dark" ? "black" : "white",
               }}
             >
@@ -68,6 +68,7 @@ export default function RootLayout() {
                   name="edit-recipe/[recipeId]"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen name="profile" options={{ headerShown: false }} />
               </Stack>
               <StatusBar style="auto" />
             </SafeAreaView>

@@ -1,5 +1,4 @@
-import { GoBackButton } from "@/components/headerButtons";
-import HeaderTitle from "@/components/headerTitle";
+import Header from "@/components/Header/Header";
 import { ThemedView } from "@/components/themed-view";
 import { H2, H3 } from "@/components/typography/typography";
 import { globalStyles } from "@/constants/stylesheets";
@@ -7,11 +6,13 @@ import { RootState } from "@/store/config";
 import { setToFavorite } from "@/store/slices/favoritesReducer";
 import { useRouter } from "expo-router";
 import { X } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   FlatList,
   Image,
   ImageSourcePropType,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -21,79 +22,93 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch, useSelector } from "react-redux";
 
 function FavoritesPage() {
+  const [scrollY, setScrollY] = useState(0);
   const dispatch = useDispatch();
   const favoritesData = useSelector((state: RootState) => {
     return state.favorites.favorites;
   });
+  console.log("🚀 ~ FavoritesPage ~ favoritesData:", favoritesData);
 
   const theme = useColorScheme() ?? "light";
 
   const router = useRouter();
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const yOffset = event.nativeEvent.contentOffset.y;
+
+    setScrollY(yOffset);
+  };
   return (
-    <ScrollView>
-      <ThemedView>
-        <GoBackButton path="/" />
-
-        <HeaderTitle title="Favorites" />
-
-        {/* Recipies */}
-        <ThemedView style={[globalStyles.spacer40]}>
-          {favoritesData.length === 0 && (
-            <ThemedView style={[globalStyles.alignCenter]}>
-              <H2>No favorites added yet</H2>
-            </ThemedView>
-          )}
-          <FlatList
-            ListHeaderComponentStyle={{ marginBottom: 10, marginTop: 10 }}
-            ListHeaderComponent={() => (
-              <H2>Favorites {favoritesData.length}</H2>
+    <>
+      <Header
+        withArrowBack
+        backPath="/"
+        scrollOffset={scrollY}
+        title="Favorites"
+      />
+      <ScrollView onScroll={handleScroll}>
+        <ThemedView style={{ paddingTop: 50 }}>
+          {/* Recipies */}
+          <ThemedView style={[globalStyles.spacer40]}>
+            {favoritesData.length === 0 && (
+              <ThemedView style={[globalStyles.alignCenter]}>
+                <H2>No favorites added yet</H2>
+              </ThemedView>
             )}
-            //
-            columnWrapperStyle={{ marginTop: hp(2) }}
-            numColumns={2}
-            contentContainerStyle={{ gap: 5, minHeight: hp(70) }}
-            data={favoritesData}
-            renderItem={({ item }) => {
-              return (
-                <ThemedView style={styles.cardContainer}>
-                  <TouchableOpacity
-                    style={{ flex: 1 }}
-                    onPress={() => {
-                      const idLength = item.id.toString().length;
-                      if (idLength < 4) {
-                        router.push(`/recipe/${item.id}-${item.categoryName}`);
-                      } else {
-                        router.push(`/my-recipe-page/view/${item.id}`);
-                      }
-                    }}
-                  >
-                    <ThemedView style={[styles.imageContainer]}>
-                      <Image
-                        source={
-                          (item.image as ImageSourcePropType) || {
-                            uri: "https://picsum.photos/360/260",
-                          }
+            <FlatList
+              scrollEnabled={false}
+              ListHeaderComponentStyle={{ marginBottom: 5, marginTop: 10 }}
+              ListHeaderComponent={() => (
+                <H2>Favorites {favoritesData.length}</H2>
+              )}
+              //
+              columnWrapperStyle={{ marginTop: hp(2) }}
+              numColumns={2}
+              contentContainerStyle={{ gap: 10, minHeight: hp(70) }}
+              data={favoritesData}
+              renderItem={({ item }) => {
+                return (
+                  <ThemedView style={styles.cardContainer}>
+                    <TouchableOpacity
+                      style={{ flex: 1 }}
+                      onPress={() => {
+                        const idLength = item.id.toString().length;
+                        if (idLength < 4) {
+                          router.push(
+                            `/recipe/${item.id}-${item.categoryName}`
+                          );
+                        } else {
+                          router.push(`/my-recipe-page/view/${item.id}`);
                         }
-                        style={[styles.recipeImage]}
-                      />
-                    </ThemedView>
-                    <H3 numberOfLines={2}>{item.title}</H3>
-                  </TouchableOpacity>
+                      }}
+                    >
+                      <ThemedView style={[styles.imageContainer]}>
+                        <Image
+                          source={
+                            (item.image as ImageSourcePropType) ||
+                            item.category?.image
+                          }
+                          style={[styles.recipeImage]}
+                        />
+                      </ThemedView>
+                      <H3 numberOfLines={2}>{item.title}</H3>
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={styles.buttonDelete}
-                    // @ts-ignore
-                    onPress={() => dispatch(setToFavorite(item))}
-                  >
-                    <X color={"white"} />
-                  </TouchableOpacity>
-                </ThemedView>
-              );
-            }}
-          />
+                    <TouchableOpacity
+                      style={styles.buttonDelete}
+                      // @ts-ignore
+                      onPress={() => dispatch(setToFavorite(item))}
+                    >
+                      <X color={"white"} />
+                    </TouchableOpacity>
+                  </ThemedView>
+                );
+              }}
+            />
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 

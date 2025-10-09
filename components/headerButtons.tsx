@@ -14,10 +14,10 @@ export const GoBackButton = ({ path }: GoBackProps) => {
   const router = useRouter();
 
   function handlePath() {
-    if (path) {
-      // @ts-ignore
-      return router.push(`${path}`);
-    }
+    // if (path) {
+    //   // @ts-ignore
+    //   return router.push(`${path}`);
+    // }
     router.back();
   }
   return (
