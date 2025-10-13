@@ -1,31 +1,62 @@
+import { Search, X } from "lucide-react-native";
 import React from "react";
-import { StyleSheet, TextInput, TextInputProps } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+} from "react-native";
 import { ThemedView } from "../themed-view";
 import { H3, Paragraph } from "../typography/typography";
 
 type InputProps = {
   handleChange: (text: string) => void;
+  handleClearInput?: () => void;
   value: string;
   errorMessage?: string;
   label?: string;
+  inputType?: "search";
 } & TextInputProps;
 export const Input = ({
   handleChange,
+  handleClearInput,
   value,
   errorMessage,
   label,
+  inputType,
   ...rest
 }: InputProps) => {
   return (
     <ThemedView style={styles.container}>
       {label && <H3>{label}</H3>}
+
+      {inputType === "search" && (
+        <Search style={{ position: "absolute", left: 10, top: 10 }} />
+      )}
       <TextInput
-        style={styles.inputStyle}
+        style={[
+          styles.inputStyle,
+          inputType === "search" && { paddingHorizontal: 40 },
+        ]}
         placeholder="Name"
         value={value}
         onChangeText={handleChange}
         {...rest}
       />
+      {inputType === "search" && value && (
+        <TouchableOpacity
+          onPress={handleClearInput}
+          style={{
+            position: "absolute",
+            right: 5,
+            top: 5,
+            padding: 5,
+            zIndex: 100,
+          }}
+        >
+          <X />
+        </TouchableOpacity>
+      )}
       {errorMessage && (
         <Paragraph style={styles.errorMessage}>{errorMessage}</Paragraph>
       )}
@@ -48,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: "white",
     width: "100%",
+    fontSize: 18,
   },
   errorMessage: {
     color: "red",

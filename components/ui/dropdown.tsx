@@ -1,17 +1,21 @@
-import { CATEGORIES_DATA } from "@/constants/MockData";
-import { CategoryType } from "@/store/slices/categoriesReducer";
 import { Picker } from "@react-native-picker/picker";
 import React from "react";
 import { StyleSheet, useColorScheme } from "react-native";
 import { ThemedView } from "../themed-view";
 import { H3 } from "../typography/typography";
 
+type OptionsType = {
+  id: number;
+  name: string;
+};
+
 type Props = {
-  values: CategoryType["name"];
+  value: string;
   label?: string;
+  options: OptionsType[];
   handleChange: (categoryValue: string) => void;
 };
-export function DropDown({ values, label, handleChange }: Props) {
+export function DropDown({ value, label, options, handleChange }: Props) {
   const theme = useColorScheme() ?? "light";
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -19,7 +23,7 @@ export function DropDown({ values, label, handleChange }: Props) {
         {label && <H3>{label}</H3>}
         <Picker
           // @ts-ignore
-          selectedValue={values.language}
+          selectedValue={value}
           onValueChange={(categoryValue) => handleChange(categoryValue)}
           style={[
             {
@@ -29,7 +33,7 @@ export function DropDown({ values, label, handleChange }: Props) {
             styles.picker,
           ]}
         >
-          {CATEGORIES_DATA.map((category) => (
+          {options.map((category) => (
             <Picker.Item
               key={category.id}
               label={category.name}

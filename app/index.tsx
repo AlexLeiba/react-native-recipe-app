@@ -1,4 +1,5 @@
 import Header from "@/components/Header/Header";
+import { RecipeCard } from "@/components/HomePage/RecipeCard";
 import { ThemedView } from "@/components/themed-view";
 import { H1, H2, H3, Paragraph } from "@/components/typography/typography";
 import { globalStyles } from "@/constants/stylesheets";
@@ -63,7 +64,7 @@ function HomePage() {
 
   return (
     <>
-      <Header scrollOffset={scrollY} title="Dashboard" />
+      <Header withSearch scrollOffset={scrollY} title="Dashboard" />
       <ScrollView
         scrollEventThrottle={16}
         onScroll={(event) => {
@@ -122,7 +123,6 @@ function HomePage() {
         <ThemedView style={[globalStyles.spacer40]}>
           <FlatList
             scrollEnabled={false}
-            ListHeaderComponentStyle={{ marginBottom: 20 }}
             ListHeaderComponent={() => (
               <H2>
                 Recipies{" "}
@@ -138,42 +138,16 @@ function HomePage() {
                 ? hardcodedRecipeData[category.name.toLowerCase()].data
                 : hardcodedRecipeData["beef"].data //initial state data
             }
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
               return (
-                <ThemedView
-                  style={[
-                    {
-                      paddingHorizontal: 10,
-                      flex: 1,
-
-                      marginBottom: 40,
-                    },
-                    { height: 250 },
-                  ]}
-                >
-                  <TouchableOpacity
-                    style={{ flex: 1 }}
-                    onPress={() =>
-                      router.push(
-                        `/recipe/${
-                          item.details.id + "-" + category?.name.toLowerCase()
-                        }`
-                      )
-                    }
-                  >
-                    <ThemedView
-                      style={[
-                        styles.recipeCard,
-                        { height: "100%", width: "100%" },
-
-                        // { height: index % 3 === 0 ? hp(25) : hp(30) },
-                      ]}
-                    >
-                      <Image source={item.image} style={[styles.recipeImage]} />
-                    </ThemedView>
-                    <H3 numberOfLines={2}>{item.details.title}</H3>
-                  </TouchableOpacity>
-                </ThemedView>
+                <RecipeCard
+                  id={item.details.id}
+                  categoryName={category?.name.toLowerCase()}
+                  image={item.image}
+                  title={item.details.title}
+                  name={item.details.title}
+                  detailsTitle={item.details.title}
+                />
               );
             }}
           />

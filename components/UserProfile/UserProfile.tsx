@@ -20,7 +20,7 @@ function UserProfile({ avatar }: UserProfileProps) {
     router.push("/profile");
   }
   return (
-    <TouchableOpacity onPress={handlePressAvatar}>
+    <TouchableOpacity onPress={handlePressAvatar} style={{ padding: 10 }}>
       <ThemedView style={styles.avatarContainer}>
         {avatar ? (
           <Image style={styles.avatar} source={{ uri: avatar || "" }} />

@@ -116,8 +116,9 @@ function EditRecipePage() {
                 />
                 {values.category?.name && (
                   <DropDown
+                    options={CATEGORIES_DATA}
                     label="Category *"
-                    values={values.category?.name}
+                    value={values.category?.name}
                     handleChange={(categoryValue) =>
                       setFieldValue("category", categoryValue)
                     }
@@ -127,8 +128,8 @@ function EditRecipePage() {
                 {values.link && (
                   <View>
                     <SwitchComponent
-                      values={values.link}
-                      setFieldValue={() => setFieldValue("link", !values.link)}
+                      value={values.link}
+                      handleChange={(value) => setFieldValue("link", value)}
                       label="Add a Link"
                     />
 

@@ -4,16 +4,16 @@ import { ThemedView } from "../themed-view";
 import { H3 } from "../typography/typography";
 
 type Props = {
-  values: boolean;
+  value: boolean;
   label?: string;
-  setFieldValue: () => void;
+  handleChange: (value: boolean) => void;
 };
 
-function SwitchComponent({ values, setFieldValue, label }: Props) {
+function SwitchComponent({ value, handleChange, label }: Props) {
   return (
     <ThemedView style={styles.container}>
       {label && <H3>{label}</H3>}
-      <Switch value={values} onValueChange={setFieldValue} />
+      <Switch value={value} onValueChange={handleChange} />
     </ThemedView>
   );
 }
@@ -21,9 +21,10 @@ function SwitchComponent({ values, setFieldValue, label }: Props) {
 export default SwitchComponent;
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
-    gap: 5,
+    flexDirection: "row",
+    gap: 15,
     flex: 1,
     minWidth: 200,
+    alignItems: "center",
   },
 });
