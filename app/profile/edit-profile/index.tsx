@@ -72,7 +72,7 @@ function EditProfile() {
 const styles = StyleSheet.create({
   formContainer: {
     flexDirection: "column",
-    gap: 10,
+
     justifyContent: "space-between",
     height: "100%",
   },

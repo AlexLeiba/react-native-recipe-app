@@ -5,19 +5,38 @@ import { DropDown } from "@/components/ui/dropdown";
 import SwitchComponent from "@/components/ui/switch";
 import { LANGUAGES } from "@/constants/MockData";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, useColorScheme, View } from "react-native";
+import i18n from "../../i18n";
 
 function SettingsPage() {
+  const currentLang = i18n.language;
   const router = useRouter();
   const theme = useColorScheme() ?? "light";
-  const [language, setLanguage] = React.useState("en");
+  const [language, setLanguage] = React.useState("english");
   const [notifications, setNotifications] = React.useState(false);
 
   function handleSave() {
     // Save settings logic here
     router.back();
   }
+
+  function handleChangeLanguage(language: string) {
+    setLanguage(language);
+    if (language === "romanian") {
+      i18n.changeLanguage("ro");
+    } else {
+      i18n.changeLanguage("en");
+    }
+  }
+
+  useEffect(() => {
+    if (currentLang === "ro") {
+      setLanguage("romanian");
+    } else {
+      setLanguage("english");
+    }
+  }, [currentLang]);
   return (
     <>
       <Header
@@ -41,7 +60,9 @@ function SettingsPage() {
               <DropDown
                 label="Language"
                 options={LANGUAGES}
-                handleChange={(categoryValue) => setLanguage(categoryValue)}
+                handleChange={(categoryValue) =>
+                  handleChangeLanguage(categoryValue)
+                }
                 value={language}
               />
             </View>

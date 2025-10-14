@@ -14,8 +14,17 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "../store/config";
+import { initI18n } from "./i18n";
 
 export default function RootLayout() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    (async () => {
+      await initI18n(); // initialize i18n safely
+      setReady(true);
+    })();
+  }, []);
+
   const [isPlashVisible, setIsPlashVisible] = useState(true);
   const colorScheme = useColorScheme();
 
@@ -25,7 +34,7 @@ export default function RootLayout() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (isPlashVisible) {
+  if (isPlashVisible || !ready) {
     return (
       <LottieSplashScreen onAnimationFinish={() => setIsPlashVisible(false)} />
     );

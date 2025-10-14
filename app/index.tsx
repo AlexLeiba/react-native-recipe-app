@@ -7,6 +7,7 @@ import { RootState } from "@/store/config";
 import { CategoryType, selectCategory } from "@/store/slices/categoriesReducer";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FlatList,
   Image,
@@ -20,6 +21,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 function HomePage() {
+  const { t } = useTranslation();
   const [scrollY, setScrollY] = useState(0);
   const theme = useColorScheme() ?? "light";
   const categoriesData = useSelector((state: RootState) => state.categories);
@@ -64,7 +66,7 @@ function HomePage() {
 
   return (
     <>
-      <Header withSearch scrollOffset={scrollY} title="Dashboard" />
+      <Header withSearch scrollOffset={scrollY} title={t("homePage.title")} />
       <ScrollView
         scrollEventThrottle={16}
         onScroll={(event) => {

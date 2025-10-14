@@ -192,17 +192,18 @@ function EditRecipePage() {
                     />
                   </View>
                 </View>
-
-                <Button
-                  type="secondary"
-                  title="Save"
-                  handlePress={handleSubmit}
-                />
-                <Button
-                  type="tertiary"
-                  title="Delete Recipe"
-                  handlePress={handleDelete}
-                />
+                <View style={{ gap: 20, marginBottom: 40, marginTop: 10 }}>
+                  <Button
+                    type="secondary"
+                    title="Save"
+                    handlePress={handleSubmit}
+                  />
+                  <Button
+                    type="tertiary"
+                    title="Delete Recipe"
+                    handlePress={handleDelete}
+                  />
+                </View>
               </View>
             );
           }}
