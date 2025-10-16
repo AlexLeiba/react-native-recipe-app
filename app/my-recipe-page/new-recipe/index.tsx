@@ -1,5 +1,5 @@
 import { ThemedView } from "@/components/themed-view";
-import { H2 } from "@/components/typography/typography";
+import { H1, H2 } from "@/components/typography/typography";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
@@ -7,11 +7,11 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
-  useColorScheme,
   View,
 } from "react-native";
 
 import Header from "@/components/Header/Header";
+import { GoBackButton } from "@/components/headerButtons";
 import { Button } from "@/components/ui/button";
 import { DropDown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ import { CATEGORIES_DATA } from "@/constants/MockData";
 import { newRecipeSchema } from "@/constants/schemas";
 import { newRecipe } from "@/store/slices/recipeReducer";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
 const initialStateForm = {
@@ -39,10 +40,10 @@ const initialStateForm = {
 };
 
 function NewRecipePage() {
+  const { t } = useTranslation();
   const [scrollY, setScrollY] = useState(0);
   const router = useRouter();
   const dispatch = useDispatch();
-  const theme = useColorScheme() ?? "light";
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const yOffset = event.nativeEvent.contentOffset.y;
@@ -58,7 +59,20 @@ function NewRecipePage() {
         title="New recipe"
       />
       <ScrollView onScroll={handleScroll}>
-        <ThemedView style={{ paddingTop: 100, paddingBottom: 60 }}>
+        <ThemedView>
+          <GoBackButton />
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: 30,
+              marginBottom: 60,
+            }}
+          >
+            <H1>{t("newRecipePage.editTitle")}</H1>
+          </View>
+
           <Formik
             // enableReinitialize
             initialValues={initialStateForm}
@@ -95,27 +109,26 @@ function NewRecipePage() {
               return (
                 <View style={styles.formContainer}>
                   <Input
-                    label="Title *"
-                    placeholder="Type here the title.."
+                    label={t("newRecipePage.form.title")}
+                    placeholder={t("newRecipePage.form.placeholderTypeHere")}
                     handleChange={handleChange("title")}
                     value={values?.title || ""}
                     errorMessage={errors.title}
                   />
                   <Input
-                    label="Description"
-                    placeholder="Type here the description.."
+                    label={t("newRecipePage.form.description")}
+                    placeholder={t("newRecipePage.form.placeholderTypeHere")}
                     handleChange={handleChange("description")}
                     value={values?.description}
                     errorMessage={errors.description}
                   />
                   <Input
-                    label="Ingredients (Separate by comma) *"
-                    placeholder="Separate the ingredients by comma."
+                    label={t("newRecipePage.form.ingredients")}
+                    placeholder={t("newRecipePage.form.placeholderIngredients")}
                     handleChange={handleChange("ingredients")}
-                    value={values?.ingredients}
+                    value={values?.ingredients as string}
                     errorMessage={errors.ingredients}
                   />
-
                   <DropDown
                     options={CATEGORIES_DATA}
                     label="Category *"
@@ -125,77 +138,92 @@ function NewRecipePage() {
                     }
                   />
 
-                  <View>
-                    <SwitchComponent
-                      value={values.link}
-                      handleChange={() => setFieldValue("link", !values.link)}
-                      label="Add a Link"
-                    />
+                  {values.link && (
+                    <View>
+                      <SwitchComponent
+                        value={values.link}
+                        handleChange={(value) => setFieldValue("link", value)}
+                        label={t("newRecipePage.form.addALink")}
+                      />
 
-                    {values.link && (
-                      <View style={styles.linkContainer}>
-                        <Input
-                          label="Link Name"
-                          placeholder="Type here the link name.."
-                          handleChange={handleChange("linkName")}
-                          value={values?.linkName}
-                          errorMessage={errors.link}
-                        />
-                        <Input
-                          label="Link URL"
-                          placeholder="Type here the link url.."
-                          handleChange={handleChange("linkUrl")}
-                          value={values?.linkUrl}
-                          errorMessage={errors.link}
-                        />
-                      </View>
-                    )}
-                  </View>
+                      {values.link && values.linkName && values.linkUrl && (
+                        <View style={styles.linkContainer}>
+                          <Input
+                            label={t("newRecipePage.form.linkName")}
+                            placeholder={t(
+                              "newRecipePage.form.placeholderTypeHere"
+                            )}
+                            handleChange={handleChange("linkName")}
+                            value={values?.linkName}
+                            errorMessage={errors.link}
+                          />
+                          <Input
+                            label={t("newRecipePage.form.linkUrl")}
+                            placeholder={t(
+                              "newRecipePage.form.placeholderTypeHere"
+                            )}
+                            handleChange={handleChange("linkUrl")}
+                            value={values?.linkUrl}
+                            errorMessage={errors.link}
+                          />
+                        </View>
+                      )}
+                    </View>
+                  )}
 
                   <View style={styles.cookingDetailsSection}>
-                    <H2>Cooking details:</H2>
+                    <H2>{t("newRecipePage.form.cookingDetails")}</H2>
 
                     <View style={styles.cookingDetailsContainer}>
                       <Input
                         keyboardType="numeric"
-                        label="Servings * "
-                        placeholder="Type here the title.."
+                        label={t("newRecipePage.form.servings")}
+                        placeholder={t(
+                          "newRecipePage.form.placeholderTypeHere"
+                        )}
                         handleChange={handleChange("servings")}
                         value={values?.servings.toString()}
                         errorMessage={errors.servings}
                       />
                       <Input
                         keyboardType="numeric"
-                        label="Time of cooking * "
-                        placeholder="Type here the title.."
+                        label={t("newRecipePage.form.timeToCook")}
+                        placeholder={t(
+                          "newRecipePage.form.placeholderTypeHere"
+                        )}
                         handleChange={handleChange("timeToCook")}
                         value={values?.timeToCook.toString()}
                         errorMessage={errors.timeToCook}
                       />
                       <Input
                         keyboardType="numeric"
-                        label="Calories"
-                        placeholder="Type here the title.."
+                        label={t("newRecipePage.form.calories")}
+                        placeholder={t(
+                          "newRecipePage.form.placeholderTypeHere"
+                        )}
                         handleChange={handleChange("calories")}
                         value={values?.calories.toString()}
                         errorMessage={errors.calories}
                       />
                       <Input
                         keyboardType="numeric"
-                        label="Temperature"
-                        placeholder="Type here the title.."
+                        label={t("newRecipePage.form.temperature")}
+                        placeholder={t(
+                          "newRecipePage.form.placeholderTypeHere"
+                        )}
                         handleChange={handleChange("temperature")}
                         value={values?.temperature.toString()}
                         errorMessage={errors.temperature}
                       />
                     </View>
                   </View>
-
-                  <Button
-                    type="secondary"
-                    title="Submit"
-                    handlePress={handleSubmit}
-                  />
+                  <View style={{ gap: 20, marginBottom: 40, marginTop: 10 }}>
+                    <Button
+                      type="secondary"
+                      title={t("newRecipePage.save")}
+                      handlePress={handleSubmit}
+                    />
+                  </View>
                 </View>
               );
             }}

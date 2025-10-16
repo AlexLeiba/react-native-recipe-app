@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 
 function EditProfile() {
+  const { t } = useTranslation();
   const router = useRouter();
   function handleSave() {
     // Save settings logic here
@@ -20,7 +22,7 @@ function EditProfile() {
         withArrowBack
         backPath="/profile"
         scrollOffset={0}
-        title="Edit Profile"
+        title={t("editProfilePage.title")}
       />
       <ThemedView style={{ paddingTop: 100 }}>
         <Avatar />
@@ -37,18 +39,21 @@ function EditProfile() {
               <View style={styles.formContainer}>
                 <View style={{ gap: 20 }}>
                   <Input
-                    label="Name"
+                    placeholder={t("editProfilePage.name")}
+                    label={t("editProfilePage.name")}
                     handleChange={handleChange("name")}
                     value={values.name}
                   />
                   <Input
-                    label="Password"
+                    placeholder={t("editProfilePage.password")}
+                    label={t("editProfilePage.password")}
                     handleChange={handleChange("password")}
                     value={values.password}
                     secureTextEntry
                   />
                   <Input
-                    label="Repeat password"
+                    placeholder={t("editProfilePage.repeatPassword")}
+                    label={t("editProfilePage.repeatPassword")}
                     handleChange={handleChange("repeatPassword")}
                     value={values.repeatPassword}
                     secureTextEntry
@@ -56,7 +61,7 @@ function EditProfile() {
                 </View>
 
                 <Button
-                  title="Save"
+                  title={t("editProfilePage.save")}
                   type="secondary"
                   handlePress={handleSubmit}
                 />

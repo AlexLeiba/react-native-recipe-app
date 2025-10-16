@@ -22,6 +22,10 @@ export const globalStyles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
+  spacer10: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
   spacer40: {
     marginTop: 40,
     marginBottom: 40,

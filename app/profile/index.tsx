@@ -3,17 +3,12 @@ import { ThemedView } from "@/components/themed-view";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 
 function ProfilePage() {
+  const { t } = useTranslation();
   const router = useRouter();
-  //   const [scrollY, setScrollY] = useState(0);
-  //
-  //   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-  //     const yOffset = event.nativeEvent.contentOffset.y;
-  //
-  //     setScrollY(yOffset);
-  //   };
 
   function handleEditProfile() {
     router.push("/profile/edit-profile");
@@ -26,23 +21,31 @@ function ProfilePage() {
   function handleLogout() {}
   return (
     <>
-      <Header withArrowBack backPath="/" scrollOffset={0} title="My Profile" />
+      <Header
+        withArrowBack
+        backPath="/"
+        scrollOffset={0}
+        title={t("myProfilePage.title")}
+      />
       <ThemedView style={[{ paddingTop: 100 }, styles.container]}>
         <View style={{ flexDirection: "column", gap: 20 }}>
           <Button
             type="secondary"
-            title="Edit Profile"
+            title={t("myProfilePage.editProfile")}
             handlePress={handleEditProfile}
           />
           <Button
-            title="Settings"
+            title={t("myProfilePage.settings")}
             type="secondary"
             handlePress={handleSettings}
           />
         </View>
 
         <View style={{ marginBottom: 50 }}>
-          <Button title="Log out" handlePress={handleLogout} />
+          <Button
+            title={t("myProfilePage.logout")}
+            handlePress={handleLogout}
+          />
         </View>
       </ThemedView>
     </>

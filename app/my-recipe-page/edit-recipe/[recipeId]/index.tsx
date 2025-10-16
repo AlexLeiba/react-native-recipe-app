@@ -18,6 +18,7 @@ import {
   RecipeType,
 } from "@/store/slices/recipeReducer";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 const initialStateForm = {
@@ -37,8 +38,8 @@ const initialStateForm = {
 };
 
 function EditRecipePage() {
+  const { t } = useTranslation();
   const [recipeData, setRecipeData] = useState<RecipeType>(initialStateForm);
-  console.log("🚀 ~ EditRecipePage ~ recipeData:", recipeData);
   const router = useRouter();
   const dispatch = useDispatch();
   const { recipeId } = useLocalSearchParams();
@@ -72,7 +73,7 @@ function EditRecipePage() {
             marginBottom: 60,
           }}
         >
-          <H1>Edit recipe</H1>
+          <H1>{t("newRecipePage.editTitle")}</H1>
         </View>
 
         <Formik
@@ -94,22 +95,22 @@ function EditRecipePage() {
             return (
               <View style={styles.formContainer}>
                 <Input
-                  label="Title *"
-                  placeholder="Type here the title.."
+                  label={t("newRecipePage.form.title")}
+                  placeholder={t("newRecipePage.form.placeholderTypeHere")}
                   handleChange={handleChange("title")}
                   value={values?.title || ""}
                   errorMessage={errors.title}
                 />
                 <Input
-                  label="Description"
-                  placeholder="Type here the description.."
+                  label={t("newRecipePage.form.description")}
+                  placeholder={t("newRecipePage.form.placeholderTypeHere")}
                   handleChange={handleChange("description")}
                   value={values?.description}
                   errorMessage={errors.description}
                 />
                 <Input
-                  label="Ingredients (Separate by comma) *"
-                  placeholder="Separate the ingredients by comma."
+                  label={t("newRecipePage.form.ingredients")}
+                  placeholder={t("newRecipePage.form.placeholderIngredients")}
                   handleChange={handleChange("ingredients")}
                   value={values?.ingredients as string}
                   errorMessage={errors.ingredients}
@@ -117,7 +118,7 @@ function EditRecipePage() {
                 {values.category?.name && (
                   <DropDown
                     options={CATEGORIES_DATA}
-                    label="Category *"
+                    label={t("newRecipePage.form.calories")}
                     value={values.category?.name}
                     handleChange={(categoryValue) =>
                       setFieldValue("category", categoryValue)
@@ -130,21 +131,25 @@ function EditRecipePage() {
                     <SwitchComponent
                       value={values.link}
                       handleChange={(value) => setFieldValue("link", value)}
-                      label="Add a Link"
+                      label={t("newRecipePage.form.addALink")}
                     />
 
                     {values.link && values.linkName && values.linkUrl && (
                       <View style={styles.linkContainer}>
                         <Input
-                          label="Link Name"
-                          placeholder="Type here the link name.."
+                          label={t("newRecipePage.form.linkName")}
+                          placeholder={t(
+                            "newRecipePage.form.placeholderTypeHere"
+                          )}
                           handleChange={handleChange("linkName")}
                           value={values?.linkName}
                           errorMessage={errors.link}
                         />
                         <Input
-                          label="Link URL"
-                          placeholder="Type here the link url.."
+                          label={t("newRecipePage.form.linkUrl")}
+                          placeholder={t(
+                            "newRecipePage.form.placeholderTypeHere"
+                          )}
                           handleChange={handleChange("linkUrl")}
                           value={values?.linkUrl}
                           errorMessage={errors.link}
@@ -155,37 +160,37 @@ function EditRecipePage() {
                 )}
 
                 <View style={styles.cookingDetailsSection}>
-                  <H2>Cooking details:</H2>
+                  <H2>{t("newRecipePage.form.cookingDetails")}</H2>
 
                   <View style={styles.cookingDetailsContainer}>
                     <Input
                       keyboardType="numeric"
-                      label="Servings * "
-                      placeholder="Type here the title.."
+                      label={t("newRecipePage.form.servings")}
+                      placeholder={t("newRecipePage.form.placeholderTypeHere")}
                       handleChange={handleChange("servings")}
                       value={values?.servings.toString()}
                       errorMessage={errors.servings}
                     />
                     <Input
                       keyboardType="numeric"
-                      label="Time of cooking * "
-                      placeholder="Type here the title.."
+                      label={t("newRecipePage.form.timeToCook")}
+                      placeholder={t("newRecipePage.form.placeholderTypeHere")}
                       handleChange={handleChange("timeToCook")}
                       value={values?.timeToCook.toString()}
                       errorMessage={errors.timeToCook}
                     />
                     <Input
                       keyboardType="numeric"
-                      label="Calories * "
-                      placeholder="Type here the title.."
+                      label={t("newRecipePage.form.calories")}
+                      placeholder={t("newRecipePage.form.placeholderTypeHere")}
                       handleChange={handleChange("calories")}
                       value={values?.calories.toString()}
                       errorMessage={errors.calories}
                     />
                     <Input
                       keyboardType="numeric"
-                      label="Temperature * "
-                      placeholder="Type here the title.."
+                      label={t("newRecipePage.form.temperature")}
+                      placeholder={t("newRecipePage.form.placeholderTypeHere")}
                       handleChange={handleChange("temperature")}
                       value={values?.temperature.toString()}
                       errorMessage={errors.temperature}
@@ -195,12 +200,12 @@ function EditRecipePage() {
                 <View style={{ gap: 20, marginBottom: 40, marginTop: 10 }}>
                   <Button
                     type="secondary"
-                    title="Save"
+                    title={t("newRecipePage.save")}
                     handlePress={handleSubmit}
                   />
                   <Button
                     type="tertiary"
-                    title="Delete Recipe"
+                    title={t("newRecipePage.delete")}
                     handlePress={handleDelete}
                   />
                 </View>

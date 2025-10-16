@@ -1,4 +1,5 @@
 import { FavoriteButton, GoBackButton } from "@/components/headerButtons";
+import { RecipeDetailsPageSkeleton } from "@/components/skeletons/RecipeDetailsPageSkeleton";
 import { ThemedView } from "@/components/themed-view";
 import { H1, H2, Paragraph } from "@/components/typography/typography";
 import { globalStyles } from "@/constants/stylesheets";
@@ -8,6 +9,7 @@ import { RecipeType } from "@/store/slices/recipeReducer";
 import { useLocalSearchParams } from "expo-router";
 import { Clock, Flame, FlameKindling, User2 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FlatList,
   Image,
@@ -19,6 +21,7 @@ import {
 import { useSelector } from "react-redux";
 
 function RecipeDetailsPage() {
+  const { t } = useTranslation();
   const { recipeId } = useLocalSearchParams();
 
   const theme = useColorScheme() ?? "light";
@@ -64,12 +67,28 @@ function RecipeDetailsPage() {
     }
   }, [recipeId, recipeData, setSelectedCategory]);
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    //fetch data
+    setLoading(true);
+
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   if (!selectedRecipeData) {
     return (
       <ThemedView>
-        <Paragraph>Recipe not found</Paragraph>
+        <Paragraph>{t("detailsRecipePage.recipeNotFound")}</Paragraph>
       </ThemedView>
     );
+  }
+
+  if (loading) {
+    return <RecipeDetailsPageSkeleton />;
   }
   return (
     <ScrollView>
@@ -122,7 +141,11 @@ function RecipeDetailsPage() {
               color={theme === "light" ? Colors.dark.icon : Colors.light.icon}
             />
           }
-          title={selectedRecipeData?.timeToCook.toString() + " min"}
+          title={
+            selectedRecipeData?.timeToCook.toString() +
+            +" " +
+            t("detailsRecipePage.min")
+          }
         />
         <DetailsCard
           icon={
@@ -130,7 +153,11 @@ function RecipeDetailsPage() {
               color={theme === "light" ? Colors.dark.icon : Colors.light.icon}
             />
           }
-          title={selectedRecipeData?.servings.toString() + " people"}
+          title={
+            selectedRecipeData?.servings.toString() +
+            " " +
+            t("detailsRecipePage.people")
+          }
         />
         <DetailsCard
           icon={
@@ -153,7 +180,9 @@ function RecipeDetailsPage() {
       <FlatList
         contentContainerStyle={{ gap: 10, marginBottom: 20 }}
         ListHeaderComponentStyle={{ marginBottom: 20 }}
-        ListHeaderComponent={() => <H2>Ingredients</H2>}
+        ListHeaderComponent={() => (
+          <H2>{t("detailsRecipePage.ingredients")}</H2>
+        )}
         data={selectedRecipeData?.ingredients}
         renderItem={({ item }) => <IngredientsCard title={item} />}
       />

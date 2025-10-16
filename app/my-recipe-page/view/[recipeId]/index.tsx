@@ -1,4 +1,5 @@
 import { FavoriteButton, GoBackButton } from "@/components/headerButtons";
+import { RecipeDetailsPageSkeleton } from "@/components/skeletons/RecipeDetailsPageSkeleton";
 import { ThemedView } from "@/components/themed-view";
 import { H1, H2, Paragraph } from "@/components/typography/typography";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { RecipeType } from "@/store/slices/recipeReducer";
 import { useLocalSearchParams } from "expo-router";
 import { Clock, Flame, FlameKindling, User2 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FlatList,
   Image,
@@ -20,6 +22,7 @@ import {
 import { useSelector } from "react-redux";
 
 function RecipeDetailsPage() {
+  const { t } = useTranslation();
   const { recipeId } = useLocalSearchParams();
   const theme = useColorScheme() ?? "light";
   const recipeData = useSelector((state: RootState) => state.newRecipe);
@@ -46,10 +49,22 @@ function RecipeDetailsPage() {
     }
   }, [recipeId, recipeData]);
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    //fetch data
+    setLoading(true);
+
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   if (!selectedRecipeData) {
     return (
       <ThemedView>
-        <Paragraph>Recipe not found</Paragraph>
+        <Paragraph>{t("detailsRecipePage.recipeNotFound")}</Paragraph>
       </ThemedView>
     );
   }
@@ -57,12 +72,14 @@ function RecipeDetailsPage() {
   const recipeCookDetails = [
     {
       icon: <Clock color={Colors[theme].text} size={20} />,
-      title: `${selectedRecipeData?.timeToCook + " min"}`,
+      title: `${
+        selectedRecipeData?.timeToCook + " " + t("detailsRecipePage.min")
+      }`,
     },
     {
       icon: <Flame color={Colors[theme].text} size={20} />,
       title: selectedRecipeData?.calories
-        ? `${selectedRecipeData?.calories + "calories"}`
+        ? `${selectedRecipeData?.calories + " kcal"}`
         : "",
     },
     {
@@ -73,9 +90,13 @@ function RecipeDetailsPage() {
     },
     {
       icon: <User2 color={Colors[theme].text} size={20} />,
-      title: `${selectedRecipeData?.servings} servings`,
+      title: `${selectedRecipeData?.servings} ${t("detailsRecipePage.people")}`,
     },
   ];
+
+  if (loading) {
+    return <RecipeDetailsPageSkeleton />;
+  }
   return (
     <ScrollView>
       <View
@@ -160,7 +181,9 @@ function RecipeDetailsPage() {
       <FlatList
         contentContainerStyle={{ gap: 10, marginBottom: 20 }}
         ListHeaderComponentStyle={{ marginBottom: 20 }}
-        ListHeaderComponent={() => <H2>Ingredients</H2>}
+        ListHeaderComponent={() => (
+          <H2>{t("detailsRecipePage.ingredients")}</H2>
+        )}
         data={selectedRecipeData?.ingredients}
         renderItem={({ item }) => <IngredientsCard title={item} />}
       />
